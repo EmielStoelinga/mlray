@@ -1,0 +1,4 @@
+ray[air]==2.1.0
+ray[tune]==2.1.0
+scikit-learn==1.0.2
+tqdm==4.64.1
