@@ -21,10 +21,17 @@ Then install the required dependencies with the following command:
 pip install -r requirements.txt
 ```
 
-## Training of SKLearn model with wachttijden data
+## Training with wachttijden data
 ### Data preparation
 Download the data from [this website](https://puc.overheid.nl/PUC/Handlers/DownloadDocument.ashx?identifier=PUC_656543_22&versienummer=1) and paste it in the `./data/raw/` folder.
 Data can be cleaned and pre-processed by running the `./src/prepare_dataset.py` Python script. In this script row without target values are removed and the features are one-hot encoded.
 
-### Model training
-A model can be trained by running the `./src/train_sklearn.py` script. First the data is loaded, then a decision tree is trained with cross validation (n=5) to predict the target value. A resulting R2 validation score is printed.
+### SKLearn model training
+A model can be trained by running the `./src/train_sklearn.py` script. First the data is loaded, then a decision tree is trained with cross validation (n=5) to predict the target value. A resulting L2 validation score is printed.
+
+### LightGBM model training
+A model can be trained by running the `./src/train_lightgbm.py` script. First the data is loaded in which columnnaes are altered slightly because LightGBM could not handle special characters in the columnnames well. Then a LightGBM model is trained to predict the target value. A resulting L2 validation score is printed.
+
+
+## Challenges
+- With Ray, it is sometimes hard to perform elementary alterations such as changing columnnames.

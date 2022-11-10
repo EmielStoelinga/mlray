@@ -19,7 +19,7 @@ def train_sklearn(target: str, train_dataset: Dataset, test_dataset: Dataset) ->
         label_column=target,
         datasets={"train": train_dataset, "valid": test_dataset},
         cv=5,
-        scoring='r2'
+        scoring='neg_mean_squared_error'
     )
     result = trainer.fit()
     return result
@@ -30,7 +30,7 @@ def main():
     train_dataset, test_dataset = load_data()
     result = train_sklearn(target, train_dataset, test_dataset)
 
-    print(f"R2 validation score: {result.metrics['valid']['test_score']}")
+    print(f"L2 validation score: {result.metrics['valid']['test_score']}")
 
 
 if __name__ == '__main__':
