@@ -3,36 +3,19 @@ from ray.data.dataset import Dataset
 from ray.air.result import Result
 from ray.train.lightgbm import LightGBMTrainer
 from ray.air.config import ScalingConfig
-import tempfile
-import pandas as pd
-import re
-import os
-
-
-def alter_columnnames(dir):
-    df = pd.read_csv(os.path.join(dir, os.listdir(dir)[0]))
-    df = df.rename(columns=lambda x: re.sub('[^A-Za-z0-9_]+', '', x))
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        tmppath = os.path.join(tmpdir, 'data.csv')
-        df.to_csv(tmppath, index=False)
-        dataset = ray.data.read_csv(tmppath)
-
-    return dataset
+from utils import get_wachttijden_categorizer
 
 
 def load_data():
-    # Because the columnnames of the data contain characters that LightGBM cannot handle,
-    # columnsnames are altered for now using pandas. I have not found a way to do this
-    # easily with Ray.
-    train_dataset = alter_columnnames('./data/preprocessed/train/')
-    test_dataset = alter_columnnames('./data/preprocessed/test/')
+    train_dataset = ray.data.read_csv('./data/preprocessed/train/')
+    test_dataset = ray.data.read_csv('./data/preprocessed/test/')
 
     return train_dataset, test_dataset
 
 
 def train_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) -> Result:
     trainer = LightGBMTrainer(
+        preprocessor=get_wachttijden_categorizer(),
         scaling_config=ScalingConfig(
             # Whether to use GPU acceleration.
             use_gpu=False,

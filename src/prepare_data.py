@@ -1,7 +1,6 @@
 import ray
 import dask.dataframe as dd
 from ray.util.dask import enable_dask_on_ray
-from ray.data.preprocessors import OneHotEncoder
 
 
 def load_data(filename):
@@ -36,7 +35,7 @@ def main():
 
     enable_dask_on_ray()
 
-    dataset_preprocessed = load_data('data/wachttijden.csv')
+    dataset_preprocessed = load_data('./data/raw/Dataset Wachttijden medisch-specialistische zorg 1 november 2022.csv')
     dataset_preprocessed = select_features(dataset_preprocessed)
     dataset_preprocessed = fill_missing_values(dataset_preprocessed)
     dataset_preprocessed = drop_invalid_records(dataset_preprocessed)
