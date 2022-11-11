@@ -17,7 +17,7 @@ def load_data():
     return train_dataset, test_dataset
 
 
-def tune_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) -> Result:
+def tune_lightgbm(target: str, train_dataset: Dataset, valid_dataset: Dataset) -> Result:
     trainer = LightGBMTrainer(
         preprocessor=get_wachttijden_categorizer(),
         scaling_config=ScalingConfig(
@@ -29,7 +29,7 @@ def tune_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) ->
         params={
             "objective": "regression"
         },
-        datasets={"train": train_dataset, "valid": test_dataset},
+        datasets={"train": train_dataset, "valid": valid_dataset},
     )
 
     tuner = Tuner(
@@ -51,10 +51,11 @@ def tune_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) ->
 
 def main():
     target = 'WACHTTIJD'
-    train_dataset, test_dataset = load_data()
-    result = tune_lightgbm(target, train_dataset, test_dataset)
+    train_dataset, valid_dataset, _ = load_data()
+    result = tune_lightgbm(target, train_dataset, valid_dataset)
 
     print(f"L2 validation score best model = {result.metrics['valid-l2']} with num_leaves = {result.metrics['config']['params']['num_leaves']}.")
+    print(f'Checkpoint of model: {result.checkpoint.uri}.')
 
 
 if __name__ == '__main__':

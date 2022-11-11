@@ -3,17 +3,10 @@ from ray.data.dataset import Dataset
 from ray.air.result import Result
 from ray.train.lightgbm import LightGBMTrainer
 from ray.air.config import ScalingConfig
-from utils import get_wachttijden_categorizer
+from utils import get_wachttijden_categorizer, load_preprocessed_data
 
 
-def load_data():
-    train_dataset = ray.data.read_csv('./data/preprocessed/train/')
-    test_dataset = ray.data.read_csv('./data/preprocessed/test/')
-
-    return train_dataset, test_dataset
-
-
-def train_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) -> Result:
+def train_lightgbm(target: str, train_dataset: Dataset, valid_dataset: Dataset) -> Result:
     trainer = LightGBMTrainer(
         preprocessor=get_wachttijden_categorizer(),
         scaling_config=ScalingConfig(
@@ -27,7 +20,7 @@ def train_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) -
             "objective": "regression",
             "num_leaves": 31
         },
-        datasets={"train": train_dataset, "valid": test_dataset},
+        datasets={"train": train_dataset, "valid": valid_dataset},
     )
     result = trainer.fit()
     return result
@@ -35,8 +28,8 @@ def train_lightgbm(target: str, train_dataset: Dataset, test_dataset: Dataset) -
 
 def main():
     target = 'WACHTTIJD'
-    train_dataset, test_dataset = load_data()
-    result = train_lightgbm(target, train_dataset, test_dataset)
+    train_dataset, valid_dataset, _ = load_preprocessed_data()
+    result = train_lightgbm(target, train_dataset, valid_dataset)
 
     print(f"L2 validation score: {result.metrics['valid-l2']}")
 

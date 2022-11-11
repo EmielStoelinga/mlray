@@ -4,16 +4,10 @@ from ray.air.result import Result
 from ray.train.sklearn import SklearnTrainer
 from ray.data.preprocessors import OneHotEncoder
 from sklearn.tree import DecisionTreeRegressor
+from utils import load_preprocessed_data
 
 
-def load_data():
-    train_dataset = ray.data.read_csv('./data/preprocessed/train/')
-    test_dataset = ray.data.read_csv('./data/preprocessed/test/')
-
-    return train_dataset, test_dataset
-
-
-def train_sklearn(target: str, train_dataset: Dataset, test_dataset: Dataset) -> Result:
+def train_sklearn(target: str, train_dataset: Dataset, valid_dataset: Dataset) -> Result:
     preprocessor = OneHotEncoder(columns=[
         'TYPE_WACHTTIJD',
         'SPECIALISME',
@@ -25,7 +19,7 @@ def train_sklearn(target: str, train_dataset: Dataset, test_dataset: Dataset) ->
         preprocessor=preprocessor,
         estimator=DecisionTreeRegressor(),
         label_column=target,
-        datasets={"train": train_dataset, "valid": test_dataset},
+        datasets={"train": train_dataset, "valid": valid_dataset},
         cv=5,
         scoring='r2'
     )
@@ -35,8 +29,8 @@ def train_sklearn(target: str, train_dataset: Dataset, test_dataset: Dataset) ->
 
 def main():
     target = 'WACHTTIJD'
-    train_dataset, test_dataset = load_data()
-    result = train_sklearn(target, train_dataset, test_dataset)
+    train_dataset, valid_dataset, _ = load_preprocessed_data()
+    result = train_sklearn(target, train_dataset, valid_dataset)
 
     print(f"R2 score: {result.metrics['valid']['test_score']}")
 

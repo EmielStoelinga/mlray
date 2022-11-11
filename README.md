@@ -39,3 +39,5 @@ A LightGBM model can be tuned by running the `./src/tune_lightgbm.py` script. In
 - It is sometimes hard to perform elementary alterations such as changing columnnames using Ray only. You are then limited to the functionalities of the ray.data.Dataset class and functions in ray.data which seem less mature than for example pandas.
   - Dask can help with these kind of alterations, because it has an interface that is similar to numpy/pandas. It has therefore been added to this repo.
 - Once data has been fitted in a ray.data.Dataset object, it is relatively easy to change between different models due to the wrappers in ray.train and also a model can easily be tuned using tuners in ray.tune.
+- I often find it hard find my way around in the documentation, as it is not always clear which component belongs to which part of ray.
+- With relatively few lines of code, one can train, tune and serve a model.

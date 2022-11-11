@@ -1,5 +1,14 @@
 from ray.data.preprocessors import Categorizer
 import pandas as pd
+import ray
+
+
+def load_preprocessed_data():
+    train_dataset = ray.data.read_csv('./data/preprocessed/train/')
+    valid_dataset = ray.data.read_csv('./data/preprocessed/test/')
+    test_dataset = valid_dataset.drop_columns(['WACHTTIJD'])
+
+    return train_dataset, valid_dataset, test_dataset
 
 
 def get_wachttijden_categorizer():
