@@ -36,7 +36,7 @@ A model can be trained by running the `./src/train_lightgbm.py` script. First th
 A LightGBM model can be tuned by running the `./src/tune_lightgbm.py` script. In the script, 8 runs with 8 different values for the paramter `num_leaves` are run of which the validation metrics of the best model are printed. 
 
 ## Model serving & inference
-A LightGBM model can be served and inference can be tested by running the `./src/serve_infer_lightgbm.py` script. Before running the script, make sure to replace the `<artifact-uri>` for a URI to a trained model.
+A LightGBM model can be served and inference can be tested by running the `./src/serve_infer_lightgbm.py` script. Before running the script, make sure to replace the `<checkpoint-uri>` for a URI to a trained model.
 
 ## Feedback
 - It is sometimes hard to perform elementary alterations such as changing columnnames using Ray only. You are then limited to the functionalities of the ray.data.Dataset class and functions in ray.data which seem less mature than for example pandas.
