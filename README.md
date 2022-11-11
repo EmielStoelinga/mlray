@@ -21,7 +21,7 @@ Then install the required dependencies with the following command:
 pip install -r requirements.txt
 ```
 
-## Training with wachttijden data
+## Model training
 ### Data preparation
 Download the data from [this website](https://puc.overheid.nl/PUC/Handlers/DownloadDocument.ashx?identifier=PUC_656543_22&versienummer=1) and paste it in the `./data/raw/` folder.
 Data can be cleaned and pre-processed by running the `./src/prepare_dataset.py` Python script. In this script row without target values are removed and the features are one-hot encoded.
@@ -32,8 +32,11 @@ A model can be trained by running the `./src/train_sklearn.py` script. First the
 ### LightGBM model training
 A model can be trained by running the `./src/train_lightgbm.py` script. First the data is loaded in which columnnaes are altered slightly because LightGBM could not handle special characters in the columnnames well. Then a LightGBM model is trained to predict the target value. A resulting L2 validation score is printed.
 
-## Tuning with wachttijden data
+## Model tuning
 A LightGBM model can be tuned by running the `./src/tune_lightgbm.py` script. In the script, 8 runs with 8 different values for the paramter `num_leaves` are run of which the validation metrics of the best model are printed. 
+
+## Model serving & inference
+A LightGBM model can be served and inference can be tested by running the `./src/serve_infer_lightgbm.py` script. Before running the script, make sure to replace the `<artifact-uri>` for a URI to a trained model.
 
 ## Feedback
 - It is sometimes hard to perform elementary alterations such as changing columnnames using Ray only. You are then limited to the functionalities of the ray.data.Dataset class and functions in ray.data which seem less mature than for example pandas.

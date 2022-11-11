@@ -26,7 +26,7 @@ def do_inference():
 
 
 def main():
-    model_checkpoint = '/home/emiel/ray_results/LightGBMTrainer_2022-11-11_10-33-30/LightGBMTrainer_e7523_00005_5_num_leaves=58_2022-11-11_10-33-47/checkpoint_000020'
+    model_checkpoint = '<checkpoint-uri>'
     serve_lightgbm(model_checkpoint)
 
     do_inference()
